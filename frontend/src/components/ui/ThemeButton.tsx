@@ -1,17 +1,17 @@
-import { useTheme } from "@/Context/ThemeContext/UseTheme"
-import { Moon, Sun } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useTheme } from "@/Context/ThemeContext/UseTheme";
+import { Moon, Sun } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 export default function ThemeButton() {
-    const { setTheme } = useTheme()
-return (
-<DropdownMenu>
+  const { setTheme } = useTheme();
+  return (
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon">
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
@@ -31,5 +31,5 @@ return (
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-)
+  );
 }

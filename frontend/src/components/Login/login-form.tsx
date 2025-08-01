@@ -1,19 +1,28 @@
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import type { LoginFormProps, LoginUser } from "./types";
+import { useState } from "react";
 
 export function LoginForm({
   className,
+  onSignUpClick,
   ...props
-}: React.ComponentProps<"div">) {
+}: LoginFormProps) {
+  const [loginUser, setLoginUser] = useState<LoginUser>({} as LoginUser);
+
+  const handleLogin = () => {
+    
+  }
+  
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -32,6 +41,9 @@ export function LoginForm({
                   id="email"
                   type="email"
                   placeholder="m@example.com"
+                  onChange={(e) =>
+                    setLoginUser({ ...loginUser, email: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -45,7 +57,14 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  onChange={(e) =>
+                    setLoginUser({ ...loginUser, password: e.target.value })
+                  }
+                />
               </div>
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full">
@@ -58,13 +77,13 @@ export function LoginForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
+              <Button onClick={onSignUpClick} variant="link">
                 Sign up
-              </a>
+              </Button>
             </div>
           </form>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

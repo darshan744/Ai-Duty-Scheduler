@@ -1,13 +1,13 @@
-import "./App.css";
+import { RouterProvider } from "react-router";
 //import ThemeButton from "./components/ui/ThemeButton";
 import { ThemeProvider } from "./Context/ThemeContext/ThemeProvider";
-import Auth from "./pages/Auth";
+import routes from "./Routes";
+
+
 function App() {
   return (
   <ThemeProvider >
-    <div className="flex flex-col min-h-screen justify-center items-center">
-     <Auth /> 
-    </div>
+    <RouterProvider router={routes} />
   </ThemeProvider>
   )
 }
