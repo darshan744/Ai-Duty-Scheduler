@@ -1,6 +1,7 @@
 import app from "./app";
 
 import environments from "./environments";
+import logger from "./Utils/Logger";
 
 const port = environments.PORT;
 
@@ -9,5 +10,5 @@ if (!port) {
   process.exit(1);
 }
 app.listen(environments.PORT, () => {
-  console.log(`Server running in ${port}`);
+  logger.info(`Server running in port : ${port}`);
 });
