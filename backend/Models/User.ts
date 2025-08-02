@@ -12,15 +12,17 @@ interface IUser extends Document {
   password: string;
   email: string;
   role: Role;
+  profileImage: string | null;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
-const userSchema = new Schema(
+const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
     regNo: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
     email: { type: String, required: true },
     role: { type: String, enum: Object.values(Role), required: true },
+    profileImage: { type: String, required: false },
   },
   {
     timestamps: true,
@@ -35,13 +37,10 @@ userSchema.pre("save", async function(next) {
 
   this.password = await hash(this.password, salt);
 });
-
-userSchema.methods.comparePassword = async function(
-  candidatePassword: string,
-) {
-  return await compare(candidatePassword, this.password);
+userSchema.methods.comparePassword = function(candidatePassword: string) {
+  return compare(candidatePassword, this.password);
 };
 
-const userModel = model("User", userSchema);
+const UserModel = model<IUser>("User", userSchema);
 
-export { userModel, IUser, Role };
+export { UserModel, IUser, Role };

@@ -1,17 +1,31 @@
 import express from "express";
-import connectToDB from "./Database";
+import connectToDB from "./ConnectToDB";
 import logger from "./Utils/Logger";
 import cors from "cors";
 import environments from "./environments";
+import AuthRoutes from "./Routes/Auth.routes";
+import ErrorMiddleware from "./Middlewares.ts/Error.middleware";
+import loggerMiddleware from "./Middlewares.ts/Logger.middleware";
+
+connectToDB();
 const app = express();
+
 logger.debug("Initialized CORS Options");
 app.use(
   cors({
     origin: environments.FRONTEND_URL,
   }),
 );
-connectToDB();
-logger.debug("Added JSON parser middleware");
+app.use(loggerMiddleware);
+logger.debug("Added Logger Middleware");
 app.use(express.json());
 
+logger.debug("Added JSON parser middleware");
+app.use("/auth", AuthRoutes);
+
+
+
+// Error Hanling Middleware
+app.use(ErrorMiddleware);
+logger.debug("Added Error Handling Middleware")
 export default app;
