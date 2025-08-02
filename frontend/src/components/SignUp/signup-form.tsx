@@ -12,7 +12,9 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 
 function SignUpForm({ onLoginClick }: SignUpFormProps) {
-  const [signUpUser, setSignUpUser] = useState<SignUpUser>({} as SignUpUser);
+  const [signUpUser, setSignUpUser] = useState<SignUpUser | undefined>(
+    undefined,
+  );
   const handleSignUp = () => {};
   return (
     <>
@@ -25,7 +27,7 @@ function SignUpForm({ onLoginClick }: SignUpFormProps) {
           <form>
             <div className="flex flex-col gap-3">
               <div className="grid gap-3">
-                <Label htmlFor="name">Email</Label>
+                <Label htmlFor="name">Name</Label>
                 <Input
                   id="name"
                   type="text"
@@ -38,7 +40,7 @@ function SignUpForm({ onLoginClick }: SignUpFormProps) {
               </div>
 
               <div className="grid gap-3">
-                <Label htmlFor="regno">Email</Label>
+                <Label htmlFor="regno">Register Number</Label>
                 <Input
                   id="regno"
                   type="text"
@@ -78,7 +80,7 @@ function SignUpForm({ onLoginClick }: SignUpFormProps) {
                 />
               </div>
               <div className="mt-4 flex flex-col gap-3">
-                <Button type="submit" className="w-full">
+                <Button onClick={handleSignUp} type="submit" className="w-full">
                   Sign Up
                 </Button>
                 <Button variant="outline" className="w-full">
@@ -87,9 +89,9 @@ function SignUpForm({ onLoginClick }: SignUpFormProps) {
               </div>
             </div>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
+              Already have an account?{" "}
               <Button onClick={onLoginClick} variant="link">
-                Sign up
+                Login
               </Button>
             </div>
           </form>
