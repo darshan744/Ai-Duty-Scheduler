@@ -16,7 +16,7 @@ const scheduleSchema = new Schema<ISchedule>(
     date: { type: Schema.Types.Date, requird: true },
     startTime: { type: Schema.Types.Date, required: true },
     endTime: { type: Schema.Types.Date, required: true },
-    venue: { type: String, required: true },
+    venue: { type: String, required: true, lowercase: true },
   },
   { timestamps: true },
 );

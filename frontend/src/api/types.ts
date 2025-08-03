@@ -2,6 +2,7 @@ export type LoginResponse = {
   name: string;
   email: string;
   profileImage: string | null;
+  role: "STAFF" | "ADMIN";
 };
 
 export type SignUpProps = {

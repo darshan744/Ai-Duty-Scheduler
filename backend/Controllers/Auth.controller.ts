@@ -52,7 +52,12 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
       })
       .status(200)
-      .json({ email, name: user.name, profileImage: user.profileImage });
+      .json({
+        email,
+        name: user.name,
+        profileImage: user.profileImage,
+        role: user.role,
+      });
   } catch (error: any) {
     next("errorCode" in error ? error : new AppError(error.message, 500));
   }

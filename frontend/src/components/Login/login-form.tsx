@@ -28,7 +28,12 @@ export function LoginForm({
     try {
       const user = await login(userCredentials);
       localStorage.setItem("user", user.toString());
-      navigate("/staff/profile");
+      if (user.role === "STAFF") {
+        navigate("/staff/profile");
+      }
+      if (user.role === "ADMIN") {
+        navigate("/admin/schedule");
+      }
       toast.success("Login Successfull");
     } catch (error) {
       if (error instanceof Error) {

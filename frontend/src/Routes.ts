@@ -6,6 +6,7 @@ import StaffProfilePage from "./pages/Staff/StaffProfile";
 import AdminPage from "./pages/Admin/AdminPage";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminProfile from "./pages/Admin/AdminProfile";
+import Scheduler from "./pages/Admin/Scheduler";
 
 const routes = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const routes = createBrowserRouter([
       {
         path: "profile",
         Component: AdminProfile,
+      },
+      {
+        path: "schedule",
+        Component: Scheduler,
       },
     ],
   },
