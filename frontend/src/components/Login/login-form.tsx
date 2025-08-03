@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { LoginFormProps, LoginUser } from "./types";
 import { useState } from "react";
+import { login } from "@/api/auth";
+import { toast } from "sonner";
 
 export function LoginForm({
   className,
@@ -19,10 +21,20 @@ export function LoginForm({
 }: LoginFormProps) {
   const [loginUser, setLoginUser] = useState<LoginUser>({} as LoginUser);
 
-  const handleLogin = () => {
-    
-  }
-  
+  const handleLogin = async () => {
+    const userCredentials = { ...loginUser };
+    try {
+      const user = await login(userCredentials);
+      localStorage.setItem("user", user.toString());
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        return;
+      }
+      toast.error("Unknown Error");
+    }
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -70,7 +82,11 @@ export function LoginForm({
                 <Button type="submit" className="w-full">
                   Login
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button
+                  onClick={handleLogin}
+                  variant="outline"
+                  className="w-full"
+                >
                   Login with Google
                 </Button>
               </div>

@@ -19,13 +19,12 @@ app.use(
 app.use(loggerMiddleware);
 logger.debug("Added Logger Middleware");
 app.use(express.json());
-
 logger.debug("Added JSON parser middleware");
+
+logger.debug("Added Routes to the application");
 app.use("/auth", AuthRoutes);
-
-
 
 // Error Hanling Middleware
 app.use(ErrorMiddleware);
-logger.debug("Added Error Handling Middleware")
+logger.debug("Added Error Handling Middleware");
 export default app;
