@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
+import { sign } from "jsonwebtoken";
 import AppError from "../Utils/AppError";
 import * as db from "../Repository";
 import { IUser, Role } from "../Models/User";
 import logger from "../Utils/Logger";
-import { sign, verify } from "jsonwebtoken";
 import environments from "../environments";
 import { signToken, verifyToken } from "../Utils/Token";
 export async function login(req: Request, res: Response, next: NextFunction) {

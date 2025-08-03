@@ -13,6 +13,7 @@ interface IUser extends Document {
   email: string;
   role: Role;
   profileImage: string | null;
+  phoneNumber: string;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 const userSchema = new Schema<IUser>(
@@ -23,6 +24,7 @@ const userSchema = new Schema<IUser>(
     email: { type: String, required: true },
     role: { type: String, enum: Object.values(Role), required: true },
     profileImage: { type: String, required: false },
+    phoneNumber: { type: String, required: false },
   },
   {
     timestamps: true,

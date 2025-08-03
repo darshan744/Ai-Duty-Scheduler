@@ -1,6 +1,6 @@
 import { connect } from "mongoose";
-import environments from "./environments";
-import logger from "./Utils/Logger";
+import environments from "../environments";
+import logger from "./Logger";
 
 export default async function connectToDB() {
   const databaseUrl = environments.DB_URL;
