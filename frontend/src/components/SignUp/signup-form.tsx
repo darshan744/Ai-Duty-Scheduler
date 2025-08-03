@@ -15,7 +15,10 @@ import type { SignUpProps } from "@/api/types";
 import { toast } from "sonner";
 
 function isInvalidUser(user: Partial<SignUpProps>): user is SignUpProps {
-  return Object.values(user).every((value) => value !== undefined);
+  const notUndefined = Object.values(user).every(
+    (value) => value !== undefined,
+  );
+  return notUndefined;
 }
 
 function SignUpForm({ onLoginClick }: SignUpFormProps) {

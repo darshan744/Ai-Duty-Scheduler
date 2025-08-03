@@ -1,4 +1,4 @@
-import axios from "axios";
+import apiClient from "./apiClient";
 import type { LoginResponse, SignUpProps, SignUpResponse } from "./types";
 
 export async function login({
@@ -8,19 +8,21 @@ export async function login({
   email: string;
   password: string;
 }) {
-  const loginUrl = import.meta.env.VITE_API_URL + "/auth/login";
-
-  const response = await axios.post<LoginResponse>(loginUrl, {
-    email,
-    password,
-  });
+  const response = await apiClient.post<LoginResponse>(
+    "/auth/login",
+    {
+      email,
+      password,
+    },
+    { withCredentials: true },
+  );
   return response.data;
 }
 
 export async function signUp(user: SignUpProps) {
-  const signUpUrl = import.meta.env.VITE_API_URL + "/auth/signUp";
-
-  const response = await axios.post<SignUpResponse>(signUpUrl, user);
+  const response = await apiClient.post<SignUpResponse>("/auth/signUp", user, {
+    withCredentials: true,
+  });
 
   return response;
 }

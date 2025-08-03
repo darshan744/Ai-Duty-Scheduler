@@ -27,6 +27,7 @@ export function LoginForm({
     try {
       const user = await login(userCredentials);
       localStorage.setItem("user", user.toString());
+      toast.success("Login Successfull");
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);

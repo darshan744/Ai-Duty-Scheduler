@@ -14,6 +14,7 @@ logger.debug("Initialized CORS Options");
 app.use(
   cors({
     origin: environments.FRONTEND_URL,
+    credentials: true,
   }),
 );
 app.use(loggerMiddleware);

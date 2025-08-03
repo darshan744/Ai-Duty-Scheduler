@@ -3,6 +3,9 @@ import AppError from "../Utils/AppError";
 import * as db from "../Repository";
 import { IUser, Role } from "../Models/User";
 import logger from "../Utils/Logger";
+import { sign, verify } from "jsonwebtoken";
+import environments from "../environments";
+import { signToken, verifyToken } from "../Utils/Token";
 export async function login(req: Request, res: Response, next: NextFunction) {
   try {
     const { email, password } = req.body;
@@ -29,8 +32,25 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     if (!isPasswordCorrect) {
       throw new AppError("Invalid Credentials", 400);
     }
-
+    const jwtKey = sign(
+      { email: user.email, id: user._id },
+      environments.JWT_KEY || "",
+      { expiresIn: "1h" },
+    );
+    const refreshKey = sign(
+      { email: user.email, id: user._id },
+      environments.REFRESH_KEY || "",
+      { expiresIn: "7d" },
+    );
     res
+      .cookie("token", jwtKey, {
+        httpOnly: true, // Prevents JS access
+        expires: new Date(Date.now() + 1000 * 60 * 60), // 1 hour
+      })
+      .cookie("refresh_token", refreshKey, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
+      })
       .status(200)
       .json({ email, name: user.name, profileImage: user.profileImage });
   } catch (error: any) {
@@ -63,6 +83,28 @@ export async function signUp(req: Request, res: Response, next: NextFunction) {
       message: "User created successfully",
       user: newUser,
     });
+  } catch (error: any) {
+    next(error instanceof AppError ? error : new AppError(error.message, 500));
+  }
+}
+
+export function refreshToken(req: Request, res: Response, next: NextFunction) {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      throw new AppError("Refresh token is missing", 401);
+    }
+    // Verify the refresh token and generate a new access token
+    const payload: any = verifyToken(refreshToken, "refresh");
+    const newAccessToken = signToken(payload, { expiresIn: "1h" }, "access");
+    logger.info("New access token generated for user:", payload.email);
+    res
+      .status(200)
+      .cookie("token", newAccessToken, {
+        expires: new Date(Date.now() + 3600000), // 1 hour
+        httpOnly: true, // Prevents client-side access to the cookie
+      })
+      .json({ message: "Token refreshed successfully" });
   } catch (error: any) {
     next(error instanceof AppError ? error : new AppError(error.message, 500));
   }
