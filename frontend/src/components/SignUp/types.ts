@@ -4,7 +4,7 @@ export type SignUpFormProps = {
 
 export type SignUpUser = {
   name: string;
-  regno: string;
+  regNo: string;
   email: string;
   password: string;
 };

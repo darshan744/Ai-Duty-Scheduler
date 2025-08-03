@@ -23,6 +23,7 @@ logger.debug("Added JSON parser middleware");
 
 logger.debug("Added Routes to the application");
 app.use("/auth", AuthRoutes);
+logger.info(AuthRoutes);
 
 // Error Hanling Middleware
 app.use(ErrorMiddleware);

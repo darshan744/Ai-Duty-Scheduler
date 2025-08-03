@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { LoginFormProps, LoginUser } from "./types";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { login } from "@/api/auth";
 import { toast } from "sonner";
 
@@ -21,7 +21,8 @@ export function LoginForm({
 }: LoginFormProps) {
   const [loginUser, setLoginUser] = useState<LoginUser>({} as LoginUser);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: FormEvent) => {
+    e.preventDefault();
     const userCredentials = { ...loginUser };
     try {
       const user = await login(userCredentials);
@@ -79,14 +80,10 @@ export function LoginForm({
                 />
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full">
+                <Button onClick={handleLogin} type="submit" className="w-full">
                   Login
                 </Button>
-                <Button
-                  onClick={handleLogin}
-                  variant="outline"
-                  className="w-full"
-                >
+                <Button variant="outline" className="w-full">
                   Login with Google
                 </Button>
               </div>

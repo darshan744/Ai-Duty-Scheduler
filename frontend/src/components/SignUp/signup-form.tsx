@@ -9,13 +9,35 @@ import { Input } from "../ui/input";
 import { Label } from "@radix-ui/react-label";
 import type { SignUpFormProps, SignUpUser } from "./types";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
+import { signUp } from "@/api/auth";
+import type { SignUpProps } from "@/api/types";
+import { toast } from "sonner";
+
+function isInvalidUser(user: Partial<SignUpProps>): user is SignUpProps {
+  return Object.values(user).every((value) => value !== undefined);
+}
 
 function SignUpForm({ onLoginClick }: SignUpFormProps) {
   const [signUpUser, setSignUpUser] = useState<SignUpUser | undefined>(
     undefined,
   );
-  const handleSignUp = () => {};
+  const handleSignUp = async (e: FormEvent) => {
+    e.preventDefault();
+    const user = { ...signUpUser };
+    if (!isInvalidUser(user)) {
+      return;
+    }
+    try {
+      const response = await signUp(user);
+      localStorage.setItem("user", response.toString());
+      toast.success("SignUp Success");
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
+  };
   return (
     <>
       <Card className="w-md">
@@ -46,7 +68,7 @@ function SignUpForm({ onLoginClick }: SignUpFormProps) {
                   type="text"
                   placeholder="Registration Number"
                   onChange={(event) =>
-                    setSignUpUser({ ...signUpUser, regno: event.target.value })
+                    setSignUpUser({ ...signUpUser, regNo: event.target.value })
                   }
                   required
                 />
