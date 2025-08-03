@@ -18,7 +18,10 @@ function isInvalidUser(user: Partial<SignUpProps>): user is SignUpProps {
   const notUndefined = Object.values(user).every(
     (value) => value !== undefined,
   );
-  return notUndefined;
+  const notEmptyString = Object.values(user).every(
+    (value) => value !== undefined,
+  );
+  return notUndefined && notEmptyString;
 }
 
 function SignUpForm({ onLoginClick }: SignUpFormProps) {
