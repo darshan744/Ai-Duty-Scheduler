@@ -8,13 +8,13 @@ function StaffPage() {
       <Toolbar>
         <div className="flex gap-4">
           <Button variant="ghost" size="sm">
-           <Link to="/staff/schedule">Dashboard</Link> 
+            <Link to="/staff/schedule">Dashboard</Link>
           </Button>
           <Button variant="ghost" size="sm">
             <Link to="/staff/profile">Profile</Link>
           </Button>
           <Button variant="destructive" size="sm">
-            <Link to="">Logout</Link>
+            <Link to="/">Logout</Link>
           </Button>
         </div>
       </Toolbar>
