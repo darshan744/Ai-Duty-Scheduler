@@ -25,3 +25,28 @@ export function createUser({
 }) {
   return UserModel.create({ email, name, regNo, profileImage, password, role });
 }
+
+export function getUser(email: string) {
+  return UserModel.findOne({ email });
+}
+
+type ProfileEdits = {
+  name?: string;
+  email?: string;
+  phoneNumber?: string;
+};
+
+export async function patchUserProfileData(
+  profileEdits: ProfileEdits,
+  email: string,
+) {
+  if (Object.keys(profileEdits).length === 0) {
+    return;
+  }
+  const result = await UserModel.findOneAndUpdate(
+    { email },
+    { $set: profileEdits },
+    { new: true },
+  ).exec();
+  return result;
+}

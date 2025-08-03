@@ -6,8 +6,6 @@ function App() {
   return (
     <ThemeProvider>
       <Toaster position="top-right" />
-      {/* <ProfilePage /> */}
-      {/* <StaffDashboard /> */}
       <RouterProvider router={routes} />
     </ThemeProvider>
   );

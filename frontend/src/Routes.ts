@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router";
 import Auth from "./pages/Auth";
-import ProfilePage from "./pages/Profile";
+import StaffSchedulePage from "./pages/Staff/StaffSchedulePage";
+import StaffPage from "./pages/Staff/StaffPage";
+import StaffProfilePage from "./pages/Staff/StaffProfile";
 
 const routes = createBrowserRouter([
   {
@@ -8,8 +10,18 @@ const routes = createBrowserRouter([
     Component: Auth,
   },
   {
-    path: "/profile",
-    Component: ProfilePage,
+    path: "staff",
+    Component: StaffPage,
+    children: [
+      {
+        path: "schedule",
+        Component: StaffSchedulePage,
+      },
+      {
+        path: "profile",
+        Component: StaffProfilePage,
+      },
+    ],
   },
 ]);
 

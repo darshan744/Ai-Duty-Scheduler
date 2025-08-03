@@ -13,6 +13,7 @@ import type { LoginFormProps, LoginUser } from "./types";
 import { useState, type FormEvent } from "react";
 import { login } from "@/api/auth";
 import { toast } from "sonner";
+import { useNavigate } from "react-router";
 
 export function LoginForm({
   className,
@@ -20,13 +21,14 @@ export function LoginForm({
   ...props
 }: LoginFormProps) {
   const [loginUser, setLoginUser] = useState<LoginUser>({} as LoginUser);
-
+  const navigate = useNavigate();
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     const userCredentials = { ...loginUser };
     try {
       const user = await login(userCredentials);
       localStorage.setItem("user", user.toString());
+      navigate("/staff/profile");
       toast.success("Login Successfull");
     } catch (error) {
       if (error instanceof Error) {
