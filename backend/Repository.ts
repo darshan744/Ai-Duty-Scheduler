@@ -1,6 +1,6 @@
 import { IUser, Role, UserModel } from "./Models/User";
 import { VenueModel } from "./Models/Venue";
-import { VenueBody } from "./Types/Types";
+import { StaffRetrieval, VenueBody } from "./Types/Types";
 
 export function getUserWithEmail(email: string) {
   return UserModel.findOne({ email: email }).select("+password");
@@ -67,4 +67,11 @@ export async function createVenue(
 }
 export async function getVenues() {
   return VenueModel.find();
+}
+
+export async function getStaffs() {
+  return UserModel.find({ role: "STAFF" })
+    .select("name regNo email")
+    .lean<StaffRetrieval>()
+    .exec();
 }

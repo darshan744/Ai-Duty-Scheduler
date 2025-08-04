@@ -26,7 +26,7 @@ export async function createVenue(
 }
 
 export async function getVenues(
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction,
 ) {
@@ -38,6 +38,22 @@ export async function getVenues(
     }));
 
     res.json({ message: "Venues", data: venueStringsArray });
+  } catch (error: any) {
+    next(error instanceof AppError ? error : new AppError(error.message, 500));
+  }
+}
+
+export async function getStaffs(
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const staffs = await db.getStaffs();
+    if (!staffs) {
+      throw new AppError("No staffs found", 404);
+    }
+    res.json({ message: "Staff", data: staffs });
   } catch (error: any) {
     next(error instanceof AppError ? error : new AppError(error.message, 500));
   }

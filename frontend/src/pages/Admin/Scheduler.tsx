@@ -20,7 +20,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { getVenues } from "@/api/admin";
+import { getStaffs, getVenues } from "@/api/admin";
+import type { StaffRetrivalFromAdmin } from "@/lib/types";
 export default function Scheduler() {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [open, setOpen] = useState(false);
@@ -29,14 +30,20 @@ export default function Scheduler() {
   const [venue, setVenue] = useState("");
   const [selectedStaff, setSelectedStaff] = useState<string[]>([]);
   const [venues, setVenues] = useState<{ name: string; id: string }[]>([]);
-  const staffList = ["Darshan", "Aarya", "Rahul", "Sneha", "Tara"];
+  const [staffList, setStaffList] = useState<StaffRetrivalFromAdmin[]>([]);
 
   const retrieveVenues = async () => {
     const response = await getVenues();
     setVenues(response.data);
   };
+  const retrieveStaffs = async () => {
+    const response = await getStaffs();
+    console.log(response);
+    setStaffList(response.data);
+  };
   useEffect(() => {
     retrieveVenues();
+    retrieveStaffs();
   }, []);
 
   const toggleStaff = (name: string) => {
@@ -84,7 +91,9 @@ export default function Scheduler() {
               <SelectContent>
                 <SelectGroup>
                   {venues.map((venue) => (
-                    <SelectItem value={venue.id}>{venue.name} </SelectItem>
+                    <SelectItem key={venue.id} value={venue.id}>
+                      {venue.name}{" "}
+                    </SelectItem>
                   ))}
                 </SelectGroup>
               </SelectContent>
@@ -144,14 +153,14 @@ export default function Scheduler() {
         <div className="flex flex-col gap-1.5">
           <Label>Select Staff</Label>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {staffList.map((name) => (
-              <div key={name} className="flex items-center gap-2">
+            {staffList.map((staff) => (
+              <div key={staff.regNo} className="flex items-center gap-2">
                 <Checkbox
-                  id={name}
-                  checked={selectedStaff.includes(name)}
-                  onCheckedChange={() => toggleStaff(name)}
+                  id={staff.regNo}
+                  checked={selectedStaff.includes(staff.name)}
+                  onCheckedChange={() => toggleStaff(staff.name)}
                 />
-                <Label htmlFor={name}>{name}</Label>
+                <Label htmlFor={staff.name}>{staff.name}</Label>
               </div>
             ))}
           </div>

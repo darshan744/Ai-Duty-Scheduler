@@ -37,3 +37,9 @@ export interface VenueCreationResponse {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type StaffRetrivalFromAdmin = {
+  name: string;
+  email: string;
+  regNo: string;
+};
