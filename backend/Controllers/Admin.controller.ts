@@ -1,8 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import AppError from "../Utils/AppError";
 import * as db from "../Repository";
-import { VenueBody } from "../Types/Types";
+import { ScheduleRequestBody, VenueBody } from "../Types/Types";
 import { IVenue } from "../Models/Venue";
+import { ScheduleModel } from "../Models/Schedule";
+import { UserModel } from "../Models/User";
+import mongoose, { ObjectId } from "mongoose";
 export async function createVenue(
   req: Request,
   res: Response,
@@ -44,12 +47,31 @@ export async function getVenues(
 }
 
 export async function getStaffs(
-  _req: Request,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) {
   try {
-    const staffs = await db.getStaffs();
+    const {
+      date,
+      fromTime,
+      toTime,
+    }: { date: string; fromTime: string; toTime: string } = req.query as {
+      date: string;
+      fromTime: string;
+      toTime: string;
+    };
+
+    console.log("Base Date", date);
+    const baseDate = parseLocalDate(date);
+
+    console.log("Converted Date", baseDate);
+    // converts 16:15 -> Date formatted with time
+    const fromDate = converFromTimeToDate(baseDate, fromTime);
+
+    const toDate = converFromTimeToDate(baseDate, toTime);
+
+    const staffs = await db.getStaffs({ date: baseDate, fromDate, toDate });
     if (!staffs) {
       throw new AppError("No staffs found", 404);
     }
@@ -57,4 +79,48 @@ export async function getStaffs(
   } catch (error: any) {
     next(error instanceof AppError ? error : new AppError(error.message, 500));
   }
+}
+
+export async function createSchedule(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const schedule: ScheduleRequestBody = req.body;
+    const baseDate = parseLocalDate(schedule.date);
+    const users = await UserModel.find({
+      regNo: { $in: schedule.users },
+    })
+      .select("_id regNo")
+      .lean<{ _id: ObjectId; regNo: string }[]>();
+    const userIds = users.map((u) => u._id);
+    const schedulePromises = userIds.map((user) =>
+      new ScheduleModel({
+        scheduleName: schedule.scheduleName,
+        date: baseDate,
+        endTime: converFromTimeToDate(baseDate, schedule.endTime),
+        startTime: converFromTimeToDate(baseDate, schedule.startTime),
+        venue: new mongoose.Types.ObjectId(schedule.venue),
+        user,
+      }).save(),
+    );
+    const allPromies = await Promise.all(schedulePromises);
+    res.json({ message: "Done bro", data: allPromies });
+  } catch (error: any) {
+    next(error instanceof AppError ? error : new AppError(error.message, 500));
+  }
+}
+
+function converFromTimeToDate(baseDate: Date, time: string): Date {
+  const [hours, minutes] = time.split(":").map(Number);
+  console.log(hours, minutes);
+  const date = new Date(baseDate);
+  date.setHours(hours, minutes, 0, 0);
+  return date;
+}
+
+function parseLocalDate(dateStr: string): Date {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day); // local date
 }

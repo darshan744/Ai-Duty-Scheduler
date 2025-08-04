@@ -20,9 +20,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { getStaffs, getVenues } from "@/api/admin";
+import { getStaffs, getVenues, scheduleTask } from "@/api/admin";
 import type { StaffRetrivalFromAdmin } from "@/lib/types";
+import { toast } from "sonner";
+import type { ScheduleRequestProps } from "@/api/types";
+
 export default function Scheduler() {
+  const [scheduleName, setScheduleName] = useState<string>("");
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [open, setOpen] = useState(false);
   const [fromTime, setFromTime] = useState("");
@@ -32,18 +36,41 @@ export default function Scheduler() {
   const [venues, setVenues] = useState<{ name: string; id: string }[]>([]);
   const [staffList, setStaffList] = useState<StaffRetrivalFromAdmin[]>([]);
 
+  useEffect(() => {
+    if (date !== undefined && fromTime !== "" && toTime !== "") {
+      const obj = { date: date.toISOString().split("T")[0], fromTime, toTime };
+      retrieveStaffs(obj);
+    }
+  }, [date, fromTime, toTime]);
+
   const retrieveVenues = async () => {
-    const response = await getVenues();
-    setVenues(response.data);
+    try {
+      const response = await getVenues();
+      setVenues(response.data);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        setVenues([]);
+      }
+    }
   };
-  const retrieveStaffs = async () => {
-    const response = await getStaffs();
-    console.log(response);
-    setStaffList(response.data);
+  const retrieveStaffs = async (timings: {
+    date: string;
+    fromTime: string;
+    toTime: string;
+  }) => {
+    try {
+      const response = await getStaffs(timings);
+      setStaffList(response.data);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        setStaffList([]);
+      }
+    }
   };
   useEffect(() => {
     retrieveVenues();
-    retrieveStaffs();
   }, []);
 
   const toggleStaff = (name: string) => {
@@ -52,23 +79,33 @@ export default function Scheduler() {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!date || !fromTime || !toTime || !venue || selectedStaff.length === 0) {
       alert("Please fill all fields");
       return;
     }
 
-    const payload = {
-      scheduleName: "AI Scheduled Duty",
-      date,
+    const payload: ScheduleRequestProps = {
+      scheduleName,
+      date: date.toISOString().split("T")[0],
       startTime: fromTime,
       endTime: toTime,
       venue,
       users: selectedStaff,
     };
-
-    console.log("Submitting schedule:", payload);
+    if (fromTime === toTime) {
+      toast.error("From time and To time is same");
+      return;
+    }
     // TODO: Replace with API call
+    try {
+      const response = await scheduleTask(payload);
+      toast.success(response.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
   };
 
   return (
@@ -81,6 +118,14 @@ export default function Scheduler() {
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
         {/* Venue + Date */}
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="scheduleName">Schedule Name</Label>
+          <Input
+            id="scheduleName"
+            placeholder="Schedule Name"
+            onChange={(e) => setScheduleName(e.target.value)}
+          />
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
             <Label>Venue</Label>
@@ -99,7 +144,7 @@ export default function Scheduler() {
               </SelectContent>
             </Select>
           </div>
-
+          {/** Date  */}
           <div className="flex flex-col gap-1.5">
             <Label>Date</Label>
             <Popover open={open} onOpenChange={setOpen}>
@@ -133,7 +178,7 @@ export default function Scheduler() {
             <Label>From</Label>
             <Input
               type="time"
-              step="1"
+              step="60"
               value={fromTime}
               onChange={(e) => setFromTime(e.target.value)}
             />
@@ -142,7 +187,7 @@ export default function Scheduler() {
             <Label>To</Label>
             <Input
               type="time"
-              step="1"
+              step="60"
               value={toTime}
               onChange={(e) => setToTime(e.target.value)}
             />
@@ -153,16 +198,20 @@ export default function Scheduler() {
         <div className="flex flex-col gap-1.5">
           <Label>Select Staff</Label>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {staffList.map((staff) => (
-              <div key={staff.regNo} className="flex items-center gap-2">
-                <Checkbox
-                  id={staff.regNo}
-                  checked={selectedStaff.includes(staff.name)}
-                  onCheckedChange={() => toggleStaff(staff.name)}
-                />
-                <Label htmlFor={staff.name}>{staff.name}</Label>
-              </div>
-            ))}
+            {staffList.length > 0 ? (
+              staffList.map((staff) => (
+                <div key={staff.regNo} className="flex items-center gap-2">
+                  <Checkbox
+                    id={staff.regNo}
+                    checked={selectedStaff.includes(staff.regNo)}
+                    onCheckedChange={() => toggleStaff(staff.regNo)}
+                  />
+                  <Label htmlFor={staff.name}>{staff.name}</Label>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500 italic">Staff will appear here </p>
+            )}
           </div>
         </div>
 

@@ -43,3 +43,12 @@ export type StaffRetrivalFromAdmin = {
   email: string;
   regNo: string;
 };
+
+export type ScheduleResponse = {
+  user: string;
+  scheduleName: string;
+  startTime: Date;
+  date: Date;
+  endTime: Date;
+  venue: string;
+};

@@ -5,7 +5,9 @@ import type {
   VenueCreationResponse,
   VenueFormData,
   StaffRetrivalFromAdmin,
+  ScheduleResponse,
 } from "../lib/types";
+import type { ScheduleRequestProps } from "./types";
 
 export async function createVenue(data: VenueFormData) {
   const response = await apiClient.post<IBaseResponse<VenueCreationResponse>>(
@@ -24,11 +26,34 @@ export async function getVenues() {
   return response.data;
 }
 
-export async function getStaffs() {
-  const response =
-    await apiClient.get<IBaseResponse<StaffRetrivalFromAdmin[]>>(
-      "/api/admin/staffs",
-    );
+export async function getStaffs({
+  date,
+  fromTime,
+  toTime,
+}: {
+  date: string;
+  fromTime: string;
+  toTime: string;
+}) {
+  const response = await apiClient.get<IBaseResponse<StaffRetrivalFromAdmin[]>>(
+    "/api/admin/staffs",
+    {
+      params: {
+        date,
+        fromTime,
+        toTime,
+      },
+    },
+  );
+
+  return response.data;
+}
+
+export async function scheduleTask(data: ScheduleRequestProps) {
+  const response = await apiClient.post<IBaseResponse<ScheduleResponse>>(
+    "/api/admin/schedule",
+    data,
+  );
 
   return response.data;
 }

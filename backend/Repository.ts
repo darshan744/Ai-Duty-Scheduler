@@ -1,3 +1,4 @@
+import { ScheduleModel } from "./Models/Schedule";
 import { IUser, Role, UserModel } from "./Models/User";
 import { VenueModel } from "./Models/Venue";
 import { StaffRetrieval, VenueBody } from "./Types/Types";
@@ -69,9 +70,28 @@ export async function getVenues() {
   return VenueModel.find();
 }
 
-export async function getStaffs() {
-  return UserModel.find({ role: "STAFF" })
+export async function getStaffs({
+  date,
+  fromDate,
+  toDate,
+}: {
+  date: Date;
+  fromDate: Date;
+  toDate: Date;
+}) {
+  console.log(date, fromDate, toDate);
+  const scheduledUser = await ScheduleModel.find({
+    date,
+    startTime: { $lt: fromDate },
+    endTime: { $gt: toDate },
+  })
+    .select("user")
+    .lean();
+  console.log(scheduledUser);
+  const userIds = scheduledUser.map((user) => user.user);
+  const users = await UserModel.find({ _id: { $nin: userIds } })
     .select("name regNo email")
     .lean<StaffRetrieval>()
     .exec();
+  return users;
 }

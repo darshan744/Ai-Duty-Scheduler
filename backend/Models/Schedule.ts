@@ -14,13 +14,13 @@ const scheduleSchema = new Schema<ISchedule>(
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     scheduleName: { type: String, required: true },
     date: { type: Schema.Types.Date, requird: true },
-    startTime: { type: Schema.Types.Date, required: true },
-    endTime: { type: Schema.Types.Date, required: true },
+    startTime: { type: Date, required: true },
+    endTime: { type: Date, required: true },
     venue: { type: Schema.Types.ObjectId, required: true, ref: "Venue" },
   },
   { timestamps: true },
 );
 
-const SchemaModel = model<ISchedule>("Schedule", scheduleSchema);
+const ScheduleModel = model<ISchedule>("Schedule", scheduleSchema);
 
-export { SchemaModel, ISchedule };
+export { ScheduleModel, ISchedule };

@@ -20,3 +20,12 @@ export type SignUpResponse = {
   role: "STAFF" | "ADMIN";
   profileImage: string | null;
 };
+
+export type ScheduleRequestProps = {
+  scheduleName: string;
+  date: Date | string;
+  startTime: string;
+  endTime: string;
+  venue: string;
+  users: string[];
+};

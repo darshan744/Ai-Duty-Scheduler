@@ -1,3 +1,5 @@
+import { ObjectId } from "mongoose";
+
 export type ProfileEdits = {
   name?: string;
   email?: string;
@@ -16,4 +18,13 @@ export type StaffRetrieval = {
   name: string;
   email: string;
   regNo: string;
+};
+
+export type ScheduleRequestBody = {
+  scheduleName: string;
+  users: string[];
+  startTime: string;
+  endTime: string;
+  venue: string;
+  date: string;
 };
