@@ -95,3 +95,34 @@ export async function getStaffs({
     .exec();
   return users;
 }
+
+type AllVenues = {
+  venueName: string;
+  location: string;
+  capacity: number;
+  type?: "hall" | "lab" | "classroom" | "auditorium" | "other";
+  isActive: boolean;
+  facilities: string[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export async function getAllVenues() {
+  return VenueModel.find().lean<AllVenues[]>();
+}
+
+type AllSchedules = {
+  user: { name: string; regNo: string };
+  scheduleName: string;
+  startTime: Date;
+  date: Date;
+  endTime: Date;
+  venue: { venueName: string };
+};
+
+export async function getAllSchedules() {
+  return ScheduleModel.find()
+    .populate("user", "regNo name")
+    .populate("venue", "venueName")
+    .lean<AllSchedules[]>();
+}

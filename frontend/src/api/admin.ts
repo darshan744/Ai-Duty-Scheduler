@@ -7,7 +7,11 @@ import type {
   StaffRetrivalFromAdmin,
   ScheduleResponse,
 } from "../lib/types";
-import type { ScheduleRequestProps } from "./types";
+import type {
+  AllVenues,
+  GroupedAllSchedules,
+  ScheduleRequestProps,
+} from "./types";
 
 export async function createVenue(data: VenueFormData) {
   const response = await apiClient.post<IBaseResponse<VenueCreationResponse>>(
@@ -55,5 +59,18 @@ export async function scheduleTask(data: ScheduleRequestProps) {
     data,
   );
 
+  return response.data;
+}
+
+export async function getAllVenues() {
+  const response =
+    await apiClient.get<IBaseResponse<AllVenues[]>>("/api/admin/venues");
+  return response.data;
+}
+
+export async function getAllSchedules() {
+  const response = await apiClient.get<IBaseResponse<GroupedAllSchedules[]>>(
+    "/api/admin/schedules",
+  );
   return response.data;
 }

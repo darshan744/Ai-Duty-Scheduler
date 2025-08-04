@@ -28,3 +28,20 @@ export type ScheduleRequestBody = {
   venue: string;
   date: string;
 };
+
+export type AllSchedules = {
+  user: { name: string; regNo: string };
+  scheduleName: string;
+  startTime: Date;
+  date: Date;
+  endTime: Date;
+  venue: { venueName: string };
+};
+export type GroupedAllSchedules = {
+  user: { name: string; regNo: string }[];
+  scheduleName: string;
+  startTime: Date;
+  date: Date;
+  endTime: Date;
+  venue: string;
+};

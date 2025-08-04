@@ -59,7 +59,7 @@ export function AddVenueCard() {
   };
 
   return (
-    <Card className="w-full max-w-xl mx-auto p-4">
+    <Card className="w-full max-w-md p-4">
       <CardHeader>
         <CardTitle>Add New Venue</CardTitle>
       </CardHeader>

@@ -29,3 +29,32 @@ export type ScheduleRequestProps = {
   venue: string;
   users: string[];
 };
+
+export type AllVenues = {
+  venueName: string;
+  location: string;
+  capacity: number;
+  type?: "hall" | "lab" | "classroom" | "auditorium" | "other";
+  isActive: boolean;
+  facilities: string[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type AllSchedules = {
+  user: { name: string; regNo: string };
+  scheduleName: string;
+  startTime: Date;
+  date: Date;
+  endTime: Date;
+  venue: { venueName: string };
+};
+
+export type GroupedAllSchedules = {
+  user: { name: string; regNo: string }[];
+  scheduleName: string;
+  startTime: Date;
+  date: Date;
+  endTime: Date;
+  venue: string;
+};

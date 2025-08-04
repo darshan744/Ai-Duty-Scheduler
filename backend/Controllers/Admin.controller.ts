@@ -1,11 +1,21 @@
 import { NextFunction, Request, Response } from "express";
 import AppError from "../Utils/AppError";
 import * as db from "../Repository";
-import { ScheduleRequestBody, VenueBody } from "../Types/Types";
+import {
+  AllSchedules,
+  GroupedAllSchedules,
+  ScheduleRequestBody,
+  VenueBody,
+} from "../Types/Types";
 import { IVenue } from "../Models/Venue";
 import { ScheduleModel } from "../Models/Schedule";
 import { UserModel } from "../Models/User";
 import mongoose, { ObjectId } from "mongoose";
+import {
+  parseLocalDate,
+  converFromTimeToDate,
+  groupSchedules,
+} from "../Utils/Helpers";
 export async function createVenue(
   req: Request,
   res: Response,
@@ -112,15 +122,31 @@ export async function createSchedule(
   }
 }
 
-function converFromTimeToDate(baseDate: Date, time: string): Date {
-  const [hours, minutes] = time.split(":").map(Number);
-  console.log(hours, minutes);
-  const date = new Date(baseDate);
-  date.setHours(hours, minutes, 0, 0);
-  return date;
+export async function getAllVenues(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const venues = await db.getAllVenues();
+    res.json({ message: "All Venues", data: venues });
+  } catch (error: any) {
+    next(error instanceof AppError ? error : new AppError(error.message, 500));
+  }
 }
 
-function parseLocalDate(dateStr: string): Date {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  return new Date(year, month - 1, day); // local date
+export async function getAllSchedules(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const allSchedules: AllSchedules[] = await db.getAllSchedules();
+
+    const grouped = groupSchedules(allSchedules);
+
+    res.json({ message: "Schedules", data: grouped });
+  } catch (error: any) {
+    next(error instanceof AppError ? error : new AppError(error.message, 500));
+  }
 }
