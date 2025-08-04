@@ -18,3 +18,22 @@ export type EditableInputs = {
   email: string;
   phoneNumber: string;
 };
+
+export interface VenueFormData {
+  venueName: string;
+  location: string;
+  capacity: number;
+  type?: "hall" | "lab" | "classroom" | "auditorium" | "other";
+  facilities: string;
+}
+
+export interface VenueCreationResponse {
+  venueName: string;
+  location: string;
+  capacity: number;
+  type?: "hall" | "lab" | "classroom" | "auditorium" | "other";
+  isActive: boolean;
+  facilities: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}

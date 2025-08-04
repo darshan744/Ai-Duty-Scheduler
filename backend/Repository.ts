@@ -1,4 +1,6 @@
 import { IUser, Role, UserModel } from "./Models/User";
+import { VenueModel } from "./Models/Venue";
+import { VenueBody } from "./Types/Types";
 
 export function getUserWithEmail(email: string) {
   return UserModel.findOne({ email: email }).select("+password");
@@ -49,4 +51,20 @@ export async function patchUserProfileData(
     { new: true },
   ).exec();
   return result;
+}
+
+export async function createVenue(
+  venueData: Omit<VenueBody, "facilities"> & {
+    facilities: string[];
+    isActive: boolean;
+  },
+) {
+  const venueModel = new VenueModel(venueData);
+
+  await venueModel.save();
+
+  return venueModel;
+}
+export async function getVenues() {
+  return VenueModel.find();
 }

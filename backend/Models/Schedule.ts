@@ -6,7 +6,7 @@ interface ISchedule extends Document {
   startTime: Date;
   date: Date;
   endTime: Date;
-  venue: String;
+  venue: ObjectId;
 }
 
 const scheduleSchema = new Schema<ISchedule>(
@@ -16,7 +16,7 @@ const scheduleSchema = new Schema<ISchedule>(
     date: { type: Schema.Types.Date, requird: true },
     startTime: { type: Schema.Types.Date, required: true },
     endTime: { type: Schema.Types.Date, required: true },
-    venue: { type: String, required: true, lowercase: true },
+    venue: { type: Schema.Types.ObjectId, required: true, ref: "Venue" },
   },
   { timestamps: true },
 );

@@ -8,7 +8,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { ChevronDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Select, SelectContent } from "@/components/ui/select";
 import { SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SelectGroup, SelectItem } from "@/components/ui/select";
@@ -20,6 +20,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { getVenues } from "@/api/admin";
 export default function Scheduler() {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [open, setOpen] = useState(false);
@@ -27,8 +28,16 @@ export default function Scheduler() {
   const [toTime, setToTime] = useState("");
   const [venue, setVenue] = useState("");
   const [selectedStaff, setSelectedStaff] = useState<string[]>([]);
-
+  const [venues, setVenues] = useState<{ name: string; id: string }[]>([]);
   const staffList = ["Darshan", "Aarya", "Rahul", "Sneha", "Tara"];
+
+  const retrieveVenues = async () => {
+    const response = await getVenues();
+    setVenues(response.data);
+  };
+  useEffect(() => {
+    retrieveVenues();
+  }, []);
 
   const toggleStaff = (name: string) => {
     setSelectedStaff((prev) =>
@@ -69,14 +78,14 @@ export default function Scheduler() {
           <div className="flex flex-col gap-1.5">
             <Label>Venue</Label>
             <Select onValueChange={(val) => setVenue(val)}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Venue" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="Auditorium">Auditorium</SelectItem>
-                  <SelectItem value="Lab 3">Lab 3</SelectItem>
-                  <SelectItem value="Room 210">Room 210</SelectItem>
+                  {venues.map((venue) => (
+                    <SelectItem value={venue.id}>{venue.name} </SelectItem>
+                  ))}
                 </SelectGroup>
               </SelectContent>
             </Select>

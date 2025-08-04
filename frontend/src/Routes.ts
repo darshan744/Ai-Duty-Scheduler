@@ -4,7 +4,7 @@ import StaffSchedulePage from "./pages/Staff/StaffSchedulePage";
 import StaffPage from "./pages/Staff/StaffPage";
 import StaffProfilePage from "./pages/Staff/StaffProfile";
 import AdminPage from "./pages/Admin/AdminPage";
-import AdminDashboard from "./pages/Admin/AdminDashboard";
+import AdminDashboard from "./pages/Admin/Dashboard/AdminDashboard";
 import AdminProfile from "./pages/Admin/AdminProfile";
 import Scheduler from "./pages/Admin/Scheduler";
 
