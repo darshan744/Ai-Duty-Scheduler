@@ -53,3 +53,28 @@ export async function patchProfile(
     next(error instanceof AppError ? error : new AppError(error.message, 500));
   }
 }
+export async function getUserSchedules(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const user = req.user?.id;
+
+    if (!user) {
+      throw new AppError("User id not found in req obj ", 500);
+    }
+
+    const schedules = await db.getUserSchedules(user);
+    const formattedSchedules = schedules.map((s) => ({
+      ...s,
+      venue: s.venue.venueName,
+    }));
+    res.json({
+      message: "User data retrieved",
+      data: formattedSchedules ?? [],
+    });
+  } catch (error: any) {
+    next(error instanceof AppError ? error : new AppError(error.message, 500));
+  }
+}

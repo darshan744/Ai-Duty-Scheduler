@@ -74,3 +74,11 @@ export async function getAllSchedules() {
   );
   return response.data;
 }
+
+export async function getUserSchedules() {
+  const response = await apiClient.get<IBaseResponse<ScheduleResponse[]>>(
+    "/api/staff/schedules",
+  );
+  console.log(response.data);
+  return response.data;
+}

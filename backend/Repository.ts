@@ -1,4 +1,5 @@
-import { ScheduleModel } from "./Models/Schedule";
+import { ObjectId } from "mongoose";
+import { ISchedule, ScheduleModel } from "./Models/Schedule";
 import { IUser, Role, UserModel } from "./Models/User";
 import { VenueModel } from "./Models/Venue";
 import { StaffRetrieval, VenueBody } from "./Types/Types";
@@ -125,4 +126,11 @@ export async function getAllSchedules() {
     .populate("user", "regNo name")
     .populate("venue", "venueName")
     .lean<AllSchedules[]>();
+}
+
+export async function getUserSchedules(user: ObjectId) {
+  return ScheduleModel.find({ user: user })
+    .populate("venue", "venueName")
+    .lean<ISchedule & { venue: { venueName: string; _id: ObjectId } }[]>()
+    .exec();
 }

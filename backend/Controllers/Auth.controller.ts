@@ -6,6 +6,7 @@ import { IUser, Role } from "../Models/User";
 import logger from "../Utils/Logger";
 import environments from "../environments";
 import { signToken, verifyToken } from "../Utils/Token";
+
 export async function login(req: Request, res: Response, next: NextFunction) {
   try {
     const { email, password } = req.body;
