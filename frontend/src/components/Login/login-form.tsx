@@ -24,7 +24,18 @@ export function LoginForm({
   const navigate = useNavigate();
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
+
     const userCredentials = { ...loginUser };
+    // console.log(userCredentials);
+    if (
+      userCredentials.email === "" ||
+      userCredentials.email === undefined ||
+      userCredentials.password === "" ||
+      userCredentials.password === undefined
+    ) {
+      toast.error("Please fill all the fileds");
+      return;
+    }
     try {
       const user = await login(userCredentials);
       localStorage.setItem("user", user.toString());

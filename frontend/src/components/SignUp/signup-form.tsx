@@ -13,6 +13,7 @@ import { useState, type FormEvent } from "react";
 import { signUp } from "@/api/auth";
 import type { SignUpProps } from "@/api/types";
 import { toast } from "sonner";
+import { useForm } from "react-hook-form";
 
 function isInvalidUser(user: Partial<SignUpProps>): user is SignUpProps {
   const notUndefined = Object.values(user).every(
@@ -25,6 +26,7 @@ function isInvalidUser(user: Partial<SignUpProps>): user is SignUpProps {
 }
 
 function SignUpForm({ onLoginClick }: SignUpFormProps) {
+  const { handleSubmit, formState } = useForm<SignUpUser>();
   const [signUpUser, setSignUpUser] = useState<SignUpUser | undefined>(
     undefined,
   );
