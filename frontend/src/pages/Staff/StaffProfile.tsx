@@ -72,7 +72,7 @@ export default function StaffProfilePage() {
       <Card>
         <CardHeader className="flex flex-row items-center gap-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage src={user.profileImage} />
+            <AvatarImage src={user.profileImage ?? undefined} />
             <AvatarFallback>
               {user.name.slice(0, 2).toUpperCase()}
             </AvatarFallback>
