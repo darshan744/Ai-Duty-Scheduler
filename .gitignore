@@ -6,3 +6,4 @@ backend/generated/prisma
 **/.zed
 
 **/dist/
+.db-env
