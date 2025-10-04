@@ -1,6 +1,10 @@
 import { config } from "dotenv";
 
-config();
+
+if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') 
+  config({path : ".env.development"})
+else
+  config();
 
 export default {
   PORT: process.env.PORT,
